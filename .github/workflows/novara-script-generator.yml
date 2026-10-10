@@ -1,0 +1,41 @@
+name: NOVARA Research + Script Generator
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  create-package:
+    name: Research trends and draft a Short
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Research current YouTube topics
+        env:
+          TUBEALFRED_API_KEY: ${{ secrets.TUBEALFRED_API_KEY }}
+        run: node scripts/novara/research-trends.js
+
+      - name: Generate original Urdu narration and Flow prompts
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash
+        run: node scripts/novara/generate-video-package.js
+
+      - name: Upload research and video package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: novara-video-package
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 7
