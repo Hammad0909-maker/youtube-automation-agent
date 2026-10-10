@@ -28,7 +28,7 @@ jobs:
       - name: Generate original Urdu narration and Flow prompts
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_MODEL: gemini-3.8-flash
         run: node scripts/novara/generate-video-package.js
 
       - name: Upload research and video package
