@@ -1,0 +1,47 @@
+name: Free Video Editor (FFmpeg)
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest:
+        description: "Project manifest JSON path in the repository"
+        required: true
+        default: "video-project/manifest.example.json"
+        type: string
+      output_name:
+        description: "Output MP4 filename"
+        required: true
+        default: "novara-video.mp4"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    name: Render video for YouTube
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Install free FFmpeg editor engine
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes ffmpeg
+          ffmpeg -version | head -n 2
+
+      - name: Render scenes, narration, and optional subtitles
+        run: |
+          python3 scripts/free-video-editor/render.py \
+            --manifest "${{ inputs.manifest }}" \
+            --output "rendered/${{ inputs.output_name }}"
+
+      - name: Upload finished MP4
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-youtube-video
+          path: rendered/${{ inputs.output_name }}
+          if-no-files-found: error
+          retention-days: 7
