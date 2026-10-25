@@ -1,0 +1,19 @@
+{
+  "title": "NOVARA example video",
+  "voiceover": "voiceover.mp3",
+  "subtitles": "captions.srt",
+  "scenes": [
+    {
+      "image": "scene-01.jpg",
+      "duration_seconds": 8
+    },
+    {
+      "image": "scene-02.jpg",
+      "duration_seconds": 12
+    },
+    {
+      "image": "scene-03.jpg",
+      "duration_seconds": 10
+    }
+  ]
+}
